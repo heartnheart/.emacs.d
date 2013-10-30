@@ -542,7 +542,10 @@ The Easiest way is to tick `org-drill' using customize of variable
 ** org mobile
 #+BEGIN_SRC emacs-lisp
   (setq org-mobile-directory "~/org/MobileOrg")
-  (setq org-mobile-checksum-binary "D:/home/.emacs.d/extra-bin/sha1sum.exe")
+  (setq org-mobile-checksum-binary (cond
+                                    (heartnheart/is-win32 "D:/home/.emacs.d/extra-bin/sha1sum.exe")
+                                    (t "shasum")))
+                               
   
   (setq org-mobile-inbox-for-pull "~/org/refile.org")
   
