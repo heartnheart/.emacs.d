@@ -53,7 +53,9 @@ set up variables indicating current OS environment
 The best way to align org table containing Unicode character is to use
  a monospaced unicode font.
 #+begin_src emacs-lisp
-  (add-to-list 'default-frame-alist '(font . "YtYaHei:pixelsize=20"))
+ (add-to-list 'default-frame-alist '(font . "YtYaHei:pixelsize=20"))
+;   (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono:pixelsize=20"))
+  
 #+end_src
 
 ** 设置emacs默认浏览器
@@ -132,7 +134,8 @@ The best way to align org table containing Unicode character is to use
    #+BEGIN_SRC emacs-lisp
      
      (setq ispell-program-name
-           (cond (heartnheart/is-win32 "D:/Software/cygwin/bin/aspell")
+           (cond ((equal system-name "XLZHANGHP")"C:/cygwin/bin/aspell")
+                 (heartnheart/is-win32 "D:/Software/cygwin/bin/aspell")
                  (t "aspell")
                  ))
      (setq ispell-personal-dictionary "~/.ispell")
@@ -468,7 +471,8 @@ last-command-char in it.
      ;; Set todo keywords
      (setq org-todo-keywords
            (quote ((sequence "TODO(t)" "NEXT(n)" "SCHEDULED(s)" "Someday" "|" "DONE(d)")
-                   (sequence "WAITING(w@/!)" "HOLD(h@/!)"  "|" "CANCELLED(c@/!)"))))
+                   (sequence "WAITING(w@/!)" "HOLD(h@/!)"  "|" "CANCELLED(c@/!)")
+                   (type "IDEA(i)"))))
      
      
      ;; cycle through the TODO states while skipping all the normal process
@@ -543,7 +547,7 @@ The Easiest way is to tick `org-drill' using customize of variable
 #+BEGIN_SRC emacs-lisp
   (setq org-mobile-directory "~/org/MobileOrg")
   (setq org-mobile-checksum-binary (cond
-                                    (heartnheart/is-win32 "D:/home/.emacs.d/extra-bin/sha1sum.exe")
+                                    (heartnheart/is-win32 (expand-file-name "~/.emacs.d/extra-bin/sha1sum.exe"))
                                     (t "shasum")))
                                
   
@@ -566,7 +570,7 @@ The Easiest way is to tick `org-drill' using customize of variable
   
                                           ;(setq org-latex-pdf-process (list "latexmk -pdf -bibtex %f"))
   (require 'ox-latex)
-  (add-to-list 'org-latex-packages-alist '("" "minted"))
-  (setq org-latex-listings 'minted)
+;  (add-to-list 'org-latex-packages-alist '("" "minted"))
+;  (setq org-latex-listings 'minted)
 #+END_SRC
 ** org beamer
