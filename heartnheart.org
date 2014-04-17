@@ -11,7 +11,32 @@ set up variables indicating current OS environment
   (setq heartnheart/is-cygwin (eq system-type 'cygwin))
   (setq heartnheart/is-linux (or (eq system-type 'gnu/linux) (eq system-type 'linux)))
 #+END_SRC
-   
+
+** Environment
+#+BEGIN_SRC emacs-lisp
+(setq exec-path (append exec-path '("C:/XLZHANG/DevTools/Git/bin")))
+(setenv "PATH" (concat "C:/XLZHANG/DevTools/Git/bin;" (getenv "PATH")))
+(setq exec-path (append exec-path '("C:/Program Files (x86)/Mozilla Firefox")))
+(setq exec-path (append exec-path '("C:/XLZHANG/DevTools/CTEX/MiKTeX/miktex/bin")))
+(setenv "PATH" (concat "C:/XLZHANG/DevTools/CTEX/MiKTeX/miktex/bin;" (getenv "PATH")))
+(setq exec-path (append exec-path '("C:/XLZHANG/DevTools/Python/Python-2.7.6")))
+(setenv "PATH" (concat "C:/XLZHANG/DevTools/Python/Python-2.7.6;" (getenv "PATH")))
+(setq exec-path (append exec-path '("C:/XLZHANG/DevTools/Python/Python-2.7.6/Scripts")))
+(setenv "PATH" (concat "C:/XLZHANG/DevTools/Python/Python-2.7.6/Scripts;" (getenv "PATH")))
+(setq exec-path (append exec-path '("C:/XLZHANG/DevTools/SumatraPDF")))
+(setenv "PATH" (concat "C:/XLZHANG/DevTools/SumatraPDF;" (getenv "PATH")))
+(setq exec-path (append exec-path '("C:/XLZHANG/DevTools/Cygwin64/bin")))
+(setenv "PATH" (concat "C:/XLZHANG/DevTools/Cygwin64/bin;" (getenv "PATH")))
+(setq exec-path (append exec-path '("C:\XLZHANG\DevTools\Git\bin") ))
+(setenv "PATH" (concat "C:\XLZHANG\DevTools\Git\bin;" (getenv "PATH")))
+(setq exec-path (append exec-path '("C:/XLZHANG/DevTools/ImageMagick/ImageMagick-6.8.8-Q16") ))
+(setenv "PATH" (concat "C:/XLZHANG/DevTools/ImageMagick/ImageMagick-6.8.8-Q16;" (getenv "PATH")))
+(setq exec-path (append exec-path '("C:/XLZHANG/DevTools/Bibtex2html") ))
+(setenv "PATH" (concat "C:/XLZHANG/DevTools/Bibtex2html;" (getenv "PATH")))
+(setq exec-path (append exec-path '("C:/XLZHANG/DevTools/Ghostscript/gs9.14/bin") ))
+(setenv "PATH" (concat "C:/XLZHANG/DevTools/Ghostscript/gs9.14/bin;" (getenv "PATH")))
+
+#+END_SRC
 ** setup ELPA
 #+BEGIN_SRC emacs-lisp
   (setq package-archives
@@ -39,12 +64,19 @@ set up variables indicating current OS environment
 
 #+RESULTS:
 : require-package
-
-   
-
-
-   
+** Personal Setting
+#+BEGIN_SRC emacs-lisp
+(setq user-full-name "Xiaolong Zhang")
+(setq user-mail-address "xlzhang@cs.hku.hk")
+#+END_SRC
 * Feature Setup
+** emacs server
+#+BEGIN_SRC emacs-lisp
+(require 'server)
+(unless (server-running-p)
+  (server-start))
+
+#+END_SRC
 ** no splash screen
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-splash-screen  t)
@@ -99,7 +131,7 @@ The best way to align org table containing Unicode character is to use
 #+end_src
 ** 设置启动时窗口的大小
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'default-frame-alist '(width . 80))
+  (add-to-list 'default-frame-alist '(width . 100))
   (add-to-list 'default-frame-alist '(height . 25))
 #+END_SRC
 ** replace selected text when typing
@@ -114,6 +146,17 @@ The best way to align org table containing Unicode character is to use
 ** coding system for EN system
 #+BEGIN_SRC emacs-lisp
   (setq-default buffer-file-coding-system 'utf-8)
+#+END_SRC
+* Holiday
+This should be put before load other packages, I don't know why. But
+set  holidays later won't work
+#+BEGIN_SRC emacs-lisp
+
+(setq holiday-other-holidays
+      '(
+        (holiday-chinese 1 1 "CNY" )
+        (holiday-fixed 1 1 "CNY")
+        ))
 #+END_SRC
 * Packages Setup (BuiltIn)
 ** flyspell 
@@ -132,15 +175,18 @@ The best way to align org table containing Unicode character is to use
 #+END_SRC
 ** spell check
    #+BEGIN_SRC emacs-lisp
-     
-     (setq ispell-program-name
-           (cond ((equal system-name "XLZHANGHP")"C:/cygwin/bin/aspell")
-                 (heartnheart/is-win32 "D:/Software/cygwin/bin/aspell")
-                 (t "aspell")
-                 ))
-     (setq ispell-personal-dictionary "~/.ispell")
-     (require 'ispell)
-     (global-set-key (kbd "<f8>") 'ispell-word)
+   (setq ispell-program-name
+         (cond ((equal system-name "XLZHANGHP") "C:/cygwin/bin/aspell")
+               ((equal system-name "XLZHANGDELL") "aspell" )
+               (heartnheart/is-win32 "D:/Software/cygwin/bin/aspell")
+               (t "aspell")
+               ))
+   (setq ispell-personal-dictionary nil)   ;must use default location,
+                                           ;other location does not work
+                                           ;for me
+   
+   (require 'ispell)
+   (global-set-key (kbd "<f8>") 'ispell-word)
    #+END_SRC
      
 ** ERC
@@ -165,7 +211,16 @@ The best way to align org table containing Unicode character is to use
              )
 #+END_SRC
 * Packages Setup (ELPA)
-  
+** org-page
+#+BEGIN_SRC emacs-lisp 
+;; (require 'org-page)
+;; (setq op/repository-directory "C:/XLZHANG/Homepages/heartnheart.github.io")
+;; (setq op/site-domain "http://heartnheart.github.io/")
+;; (setq op/personal-disqus-shortname "heartnheart")
+#+END_SRC
+** expand-region
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
 ** zenburn theme
   #+begin_src emacs-lisp
     (require-package 'zenburn-theme)
@@ -173,10 +228,19 @@ The best way to align org table containing Unicode character is to use
   #+end_src
 ** autopair
    #+begin_src emacs-lisp
-     (require-package 'autopair)
-     (require 'autopair)
-     (autopair-global-mode)
+   ;; (require-package 'autopair)
+   ;; (require 'autopair)
+   ;; (autopair-global-mode)
    #+end_src
+** smartparen
+#+BEGIN_SRC emacs-lisp
+(require 'smartparens-config)
+(sp-local-pair 'org-mode "\\|" "\\|")
+(sp-local-pair 'org-mode "'" nil :actions nil)
+(sp-local-pair 'org-mode "`" nil :actions nil)
+(sp-local-pair 'latex-mode "'" nil :actions nil)
+(smartparens-global-mode)
+#+END_SRC
 ** smex
    #+begin_src emacs-lisp
      (require-package 'smex)
@@ -320,11 +384,163 @@ The best way to align org table containing Unicode character is to use
                         (wxhelp-browse-class-or-api (thing-at-point 'symbol))))
    #+END_SRC
 
-** auctex
+** AucTex
 #+BEGIN_SRC emacs-lisp
-  (setq TeX-engine 'xetex)
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq TeX-source-correlate-mode t)                                        ;(setq-default TeX-master nil)
+(setq TeX-source-correlate-method 'synctex)
+(setq TeX-view-program-list
+      '(("Sumatra PDF" ("\"C:/XLZHANG/DevTools/SumatraPDF/SumatraPDF.exe\" -reuse-instance"
+                      (mode-io-correlate " -forward-search %b %n ") " %o"))))
+
+
+(if heartnheart/is-win32
+    (setq TeX-engine-alist 
+          '(
+            (xetex "XeTeX" 
+                   "xetex  --shell-escape" 
+                   "xelatex --shell-escape" 
+                   "xetex")
+            (xetex_sh "XeTeX shell escape" 
+                      "xetex --file-line-error --shell-escape" 
+                      "xelatex --file-line-error --shell-escape" 
+                      "xetex"))))
+
+
+(eval-after-load "tex"
+  '(progn
+     (TeX-global-PDF-mode t)
+     (assq-delete-all 'output-pdf TeX-view-program-selection)
+     (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))))
+
+
+;(setq TeX-engine 'default)
+        
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode) 
+
+
 #+END_SRC
-* Packages Setup (VC)
+** RefTex
+#+BEGIN_SRC emacs-lisp
+  (setq reftex-default-bibliography '("~/research/references/references.bib"))
+  (setq reftex-cite-format "\\citeA{%l}" )
+#+END_SRC
+** org mobile
+*** src
+#+BEGIN_SRC emacs-lisp
+;; set the directory to interact with mobile org
+(setq org-mobile-directory "~/org/MobileOrg")
+
+;; 1. org-mobile-checksum-binary requires an absolute path for this
+;; will be used in cmd on windows
+;; 2. Currently Only works good on Windows, doesn't test on Linux
+
+(setq org-mobile-checksum-binary (cond
+                                  (heartnheart/is-win32 (expand-file-name "~/.emacs.d/extra-bin/sha1sum.exe"))
+                                  (t "shasum")))
+                             
+
+(setq org-mobile-inbox-for-pull "~/org/refile.org")
+
+;; the sync stuff
+(add-hook 'after-init-hook 'org-mobile-pull)
+(add-hook 'kill-emacs-hook 'org-mobile-push)
+
+
+(defvar org-mobile-sync-timer nil)
+(defvar org-mobile-sync-idle-secs (* 60 10))
+(defun org-mobile-sync ()
+  (interactive)
+  (org-mobile-pull)
+  (org-mobile-push))
+(defun org-mobile-sync-enable ()
+  "enable mobile org idle sync"
+  (interactive)
+  (setq org-mobile-sync-timer
+        (run-with-idle-timer org-mobile-sync-idle-secs t
+                             'org-mobile-sync)));
+(defun org-mobile-sync-disable ()
+  "disable mobile org idle sync"
+  (interactive)
+  (cancel-timer org-mobile-sync-timer))
+(org-mobile-sync-enable)
+#+END_SRC
+*** TODO test org-mobile-checksum-binary for linux
+
+** org latex pdf
+#+BEGIN_SRC emacs-lisp
+  (setq org-latex-pdf-process '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                                "bibtex %b"
+                                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+  
+                                          ;(setq org-latex-pdf-process (list "latexmk -pdf -bibtex %f"))
+  (require 'ox-latex)
+;  (add-to-list 'org-latex-packages-alist '("" "minted"))
+;  (setq org-latex-listings 'minted)
+#+END_SRC
+** org beamer
+#+BEGIN_SRC emacs-lisp
+(setq org-latex-listings 'minted)
+(require 'ox-latex)
+(add-to-list 'org-latex-packages-alist '("" "minted" nil))
+#+END_SRC
+** org-mode by bh
+#+BEGIN_SRC emacs-lisp
+(load "org-mode.el")
+(message "org-agendafiles = %s" org-agenda-files)
+#+END_SRC
+
+
+
+* Packages Setup (OWN)
+** org-insert-raw-image
+#+BEGIN_SRC emacs-lisp
+(defvar org-clipboard-image-suffix 0)
+(make-variable-buffer-local 'org-clipboard-image-suffix)
+(setq-default org-clipboard-image-suffix 0)
+
+(defun org-insert-clipboard-get-image-default-name ()
+  (concat (file-name-base (buffer-file-name))
+          "_"
+          (format "%d" org-clipboard-image-suffix)
+          ".png"))
+
+(defun org-insert-clipboard-image (filename refname caption)
+  (interactive (let* (
+                      (i-filename   (read-string (format "Image Filename (%s): " (org-insert-clipboard-get-image-default-name)) nil nil (org-insert-clipboard-get-image-default-name)))
+                      (i-filebase (concat "pasted-"
+                                          (if (string-match "\\." i-filename)
+                                              (substring i-filename 0 (string-match "\\." i-filename))
+                                            i-filename)))
+                      (i-refdefault (concat "pic:" i-filebase))
+                      (i-refname (read-string (format "#+NAME (%s): " i-refdefault) nil nil i-refdefault))
+                      (i-caption (read-string (format "#+CAPTION (%s): " i-filename) nil nil i-filename)))
+                 (setq i-caption (capitalize (replace-regexp-in-string "_" " " i-filename)))
+                 (unless (string-match "\\." i-filename) ;if file type
+                                                         ;;not
+                                                         ;specified,
+                                                         ;use .png
+                   (setq i-filename (concat i-filename ".png")))
+
+                 (list i-filename i-refname i-caption)))
+  (incf org-clipboard-image-suffix)
+
+  (let* ((exit-status 
+           (call-process "convert" nil nil nil 
+                         "clipboard:" filename)))
+    (save-excursion
+      (end-of-line)
+      (insert "\n")
+      (insert (format "\n#+CAPTION: %s\n" caption))
+      (insert (format "#+NAME: %s\n" refname))
+      (org-insert-link nil (concat "file:" filename) ""))
+
+    (insert (format "Figure [[%s]]" refname))
+    (message "%s,%s" filename refname caption)))
+
+#+END_SRC
 ** youdao dict
 #+BEGIN_SRC emacs-lisp
   (defun yodao-dict-search-wordap (&optional word)
@@ -352,6 +568,12 @@ last-command-char in it.
       (let ((filename (buffer-file-name)))
         (move-file-to-trash filename t)
         (kill-buffer)))
+#+END_SRC
+** autohotkey
+#+BEGIN_SRC emacs-lisp
+  (autoload 'xahk-mode "xahk-mode" "Load xahk-mode for editing AutoHotkey scripts." t)
+  (add-to-list 'auto-mode-alist '("\\.ahk\\'" . xahk-mode))
+  (defalias 'ahk-mode 'xahk-mode) ; make it easier to remember.
 #+END_SRC
 * Coding Setup
 ** wxWidgets indenting clues
@@ -457,120 +679,104 @@ last-command-char in it.
 * GTD
 ** org mode 8 
    #+BEGIN_SRC emacs-lisp
-     ;; set org-mode as the default mode for .org, .org_archive, and .txt
-     (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)\\'" . org-mode))
-     (require 'org)
-     
-     ;; common key bindings
-     (global-set-key "\C-cl" 'org-store-link)
-     (global-set-key "\C-cb" 'org-iswitchb)
-     (global-set-key "\C-cc" 'org-capture)
-     (global-set-key "\C-ca" 'org-agenda)
-     
-     
-     ;; Set todo keywords
-     (setq org-todo-keywords
-           (quote ((sequence "TODO(t)" "NEXT(n)" "SCHEDULED(s)" "Someday" "|" "DONE(d)")
-                   (sequence "WAITING(w@/!)" "HOLD(h@/!)"  "|" "CANCELLED(c@/!)")
-                   (type "IDEA(i)"))))
-     
-     
-     ;; cycle through the TODO states while skipping all the normal process
-     (setq org-treat-S-cursor-todo-selection-as-state-change nil)
-     
-     ;; ORG-CAPTURE
-     ;; set the default file for org capture for templates that do not
-     ;; specify a target
-     (setq org-default-notes-file "~/org/refile.org")
-     
-     ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
-     (setq org-capture-templates
-           (quote (("t" "Todo" entry (file "~/org/refile.org")
-                    "* TODO %?\n%U\n%a\n")
-                   ("n" "note" entry (file "~/org/refile.org")
-                    "* %? :NOTE:\n%U\n%a\n")
-                   ("j" "Journal" entry (file+datetree "~/org/journal.org")
-                    "* %?\n%U\n" )
-                   ("p" "English plural words" table-line (file+headline "~/org/notes.org" "special plural words")
-                    "|%?| |%U|")
-                                  ("w" "English Words" table-line (file+headline "~/org/refile.org" "new words")
-                    "|%?| | | |%U|"               )
-     
-                   ("e" "Exercise" table-line (file+headline "~/org/exercise.org" "Exercise")
-                    "|%?| |  |%U|")
-                   )))
-     
-     
-     
-     
-     
-     (setq org-startup-indented t)           ;use org-indent-mode by default
-     (setq org-export-with-smart-quotes t)
-     ;; use sumatraPDF to open PDF
-     (add-hook 'org-mode-hook
-           '(lambda ()
-              (local-unset-key "\C-c[")
-              (local-unset-key "\C-c]")
-              (delete '("\\.pdf\\'" . default) org-file-apps)
-              (add-to-list 'org-file-apps
-                           `("\\.pdf\\'" .
-                             ,(cond (heartnheart/is-win32 "sumatraPDF -reuse-instance %s")
-                                   (t "FoxitReader %s")
-                                   )
-                             )
-                           )))
-     
-     
-     
-     ;; agenda
-     (setq org-agenda-files '("~/org/refile.org" 
-                              "~/org/task.org"
-                              "~/org/notes.org"
-                              "~/research/notes/ResearchNotes.org"
-                              ;; for current classes
-                              "~/classes/PR/notes/PR.org"
-                              "~/classes/grsc6001/notes/grsc6001.org"
-                              "~/classes/grsc6008/notes/grsc6008.org"
-                              ))
-     
-     ;; refile
-     (setq org-refile-use-outline-path 'file)
-     (setq org-refile-targets '((org-agenda-files . (:maxlevel .  4)))) ;ATTEDTION! must set after
-                                             ;org-ageda-files has been set
+   (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)\\'" . org-mode))
+   (require 'org)
+   
+   ;; common key bindings
+   (global-set-key "\C-cl" 'org-store-link)
+   (global-set-key "\C-cb" 'org-iswitchb)
+   (global-set-key "\C-cc" 'org-capture)
+   (global-set-key "\C-ca" 'org-agenda)
+   
+   
+   ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+   (setq org-capture-templates
+         (quote (("t" "Todo" entry (file "~/org/refile.org")
+                  "* TODO %?\n%U\n%a\n")
+                 ("n" "note" entry (file "~/org/refile.org")
+                  "* %? :NOTE:\n%U\n%a\n")
+                 
+                 ("j" "Journal" entry (file+datetree "~/org/journal.org")
+                  "* %?\n%U\n" )
+   
+                 )))
+   
+        
+   
+   (setq org-startup-indented t)           ;use org-indent-mode by default
+   (setq org-export-with-smart-quotes t)
+   ;; use sumatraPDF to open PDF
+   (add-hook 'org-mode-hook
+         '(lambda ()
+            (local-unset-key "\C-c[")
+            (local-unset-key "\C-c]")
+            (delete '("\\.pdf\\'" . default) org-file-apps)
+            (add-to-list 'org-file-apps
+                         `("\\.pdf\\'" .
+                           ,(cond (heartnheart/is-win32 "sumatraPDF -reuse-instance %s")
+                                 (t "FoxitReader %s")
+                                 )
+                           )
+                         )))
+   (setq org-entities-user '(("space" "\\ " nil " " " " " " " ")))
+          
+   ;; Open thunderlink in org mode
+   (require 'org)
+   (org-add-link-type "thunderlink" 'org-thunderlink-open)
+   (defun org-thunderlink-open (path)
+   "open thunderlink"
+       (shell-command
+           (format "thunderbird -thunderlink thunderlink:%s" path
+           )
+       )
+   )
    #+END_SRC
+*** Emphasis is allowed in more lines
+#+BEGIN_SRC emacs-lisp
+(setcar (nthcdr 4 org-emphasis-regexp-components) 4)
+(custom-set-variables `(org-emphasis-alist ',org-emphasis-alist))
+#+END_SRC
+** org cdlatex mode
+#+BEGIN_SRC emacs-lisp
 
+(defun change-org-cdlatex-keys ()
+
+;  (define-key org-cdlatex-mode-map (kbd "'") 'cdlatex-math-symbol)
+;  (define-key org-cdlatex-mode-map (kbd "`") 'org-cdlatex-math-modify)
+  (define-key org-cdlatex-mode-map (kbd "_") nil)
+  (define-key org-cdlatex-mode-map (kbd "^") nil)
+  (add-to-list 'cdlatex-math-modify-alist 
+             '(66 "\\mathbb" nil t nil nil))
+
+  )
+
+(add-hook 'cdlatex-mode-hook 'change-org-cdlatex-keys)
+#+END_SRC
+** org babel
+*** change sh to cmd on windows
+#+BEGIN_SRC emacs-lisp
+(setq org-babel-sh-command "D:/Software/cygwin/bin/bash.exe")
+#+END_SRC
 ** org drill
 The Easiest way is to tick `org-drill' using customize of variable
 `org-modules'. For manually set up, use `(require 'org-drill)'
-
-** org mobile
+** org publish
 #+BEGIN_SRC emacs-lisp
-  (setq org-mobile-directory "~/org/MobileOrg")
-  (setq org-mobile-checksum-binary (cond
-                                    (heartnheart/is-win32 (expand-file-name "~/.emacs.d/extra-bin/sha1sum.exe"))
-                                    (t "shasum")))
-                               
-  
-  (setq org-mobile-inbox-for-pull "~/org/refile.org")
-  
-  
+(setq org-publish-project-alist
+      '(("org"
+         :base-directory "~/org/"
+         :publishing-directory "C:/XLZHANG/Homepages/localtest/"
+         :section-numbers nil
+         :base-extension "org"
+         :auto-sitemap t
+         :sitemap-filename "index.org"
+         :sitemap-title "index"
+         :sitemap-function org-publish-org-sitemap
+         :link-home "index.html"
+         :with-toc nil
+         :publishing-function org-html-publish-to-html
+         :html-head "<link rel=\"stylesheet\"
+                         href=\"../other/mystyle.css\"
+                         type=\"text/css\"/>")))
 #+END_SRC
 
-** reftex
-#+BEGIN_SRC emacs-lisp
-  (setq reftex-default-bibliography '("~/research/references/references.bib"))
-  (setq reftex-cite-format "\\citeA{%l}" )
-#+END_SRC
-** org latex pdf
-#+BEGIN_SRC emacs-lisp
-  (setq org-latex-pdf-process '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                                "bibtex %b"
-                                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-  
-                                          ;(setq org-latex-pdf-process (list "latexmk -pdf -bibtex %f"))
-  (require 'ox-latex)
-;  (add-to-list 'org-latex-packages-alist '("" "minted"))
-;  (setq org-latex-listings 'minted)
-#+END_SRC
-** org beamer
