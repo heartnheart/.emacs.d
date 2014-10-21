@@ -14,6 +14,8 @@ set up variables indicating current OS environment
 
 ** Environment
 #+BEGIN_SRC emacs-lisp
+(setq exec-path (append exec-path '("C:/XLZHANG/DevTools/gs9.14/bin")))
+(setenv "PATH" (concat "C:/XLZHANG/DevTools/gs9.14/bin;" (getenv "PATH")))
 (setq exec-path (append exec-path '("C:/XLZHANG/DevTools/Git/bin")))
 (setenv "PATH" (concat "C:/XLZHANG/DevTools/Git/bin;" (getenv "PATH")))
 (setq exec-path (append exec-path '("C:/Program Files (x86)/Mozilla Firefox")))
@@ -27,14 +29,16 @@ set up variables indicating current OS environment
 (setenv "PATH" (concat "C:/XLZHANG/DevTools/SumatraPDF;" (getenv "PATH")))
 (setq exec-path (append exec-path '("C:/XLZHANG/DevTools/Cygwin64/bin")))
 (setenv "PATH" (concat "C:/XLZHANG/DevTools/Cygwin64/bin;" (getenv "PATH")))
-(setq exec-path (append exec-path '("C:\XLZHANG\DevTools\Git\bin") ))
-(setenv "PATH" (concat "C:\XLZHANG\DevTools\Git\bin;" (getenv "PATH")))
+(setq exec-path (append exec-path '("C:/XLZHANG/DevTools/Git/bin") ))
+(setenv "PATH" (concat "C:/XLZHANG/DevTools/Git/bin;" (getenv "PATH")))
 (setq exec-path (append exec-path '("C:/XLZHANG/DevTools/ImageMagick/ImageMagick-6.8.8-Q16") ))
 (setenv "PATH" (concat "C:/XLZHANG/DevTools/ImageMagick/ImageMagick-6.8.8-Q16;" (getenv "PATH")))
 (setq exec-path (append exec-path '("C:/XLZHANG/DevTools/Bibtex2html") ))
 (setenv "PATH" (concat "C:/XLZHANG/DevTools/Bibtex2html;" (getenv "PATH")))
 (setq exec-path (append exec-path '("C:/XLZHANG/DevTools/Ghostscript/gs9.14/bin") ))
 (setenv "PATH" (concat "C:/XLZHANG/DevTools/Ghostscript/gs9.14/bin;" (getenv "PATH")))
+(setq exec-path (append exec-path '("C:/XLZHANG/360Yun/WindowsGreen/peg-markdown") ))
+(setenv "PATH" (concat "C:/XLZHANG/360Yun/WindowsGreen/peg-markdown;" (getenv "PATH")))
 
 #+END_SRC
 ** setup ELPA
@@ -46,7 +50,7 @@ set up variables indicating current OS environment
           ("marmalade"   . "http://marmalade-repo.org/packages/")
           ("melpa" . "http://melpa.milkbox.net/packages/")))
   (package-initialize)
-  
+  (require 'org)
   ;;------------------------------------------------------------------------------
   ;; On-demand installation of packages -- from binchen
   ;;------------------------------------------------------------------------------
@@ -73,7 +77,7 @@ set up variables indicating current OS environment
 ** emacs server
 #+BEGIN_SRC emacs-lisp
 (require 'server)
-(unless (server-running-p)
+(if (not (server-running-p))
   (server-start))
 
 #+END_SRC
@@ -159,6 +163,10 @@ set  holidays later won't work
         ))
 #+END_SRC
 * Packages Setup (BuiltIn)
+** linum-mode
+#+BEGIN_SRC emacs-lisp
+(global-linum-mode)
+#+END_SRC
 ** flyspell 
    #+begin_src emacs-lisp
      ;; use apsell as ispell backend
@@ -171,12 +179,13 @@ set  holidays later won't work
    #+end_src
 ** flymake
 #+BEGIN_SRC emacs-lisp
+  (require-package 'flymake-cursor)
   (require 'flymake-cursor)
 #+END_SRC
 ** spell check
    #+BEGIN_SRC emacs-lisp
    (setq ispell-program-name
-         (cond ((equal system-name "XLZHANGHP") "C:/cygwin/bin/aspell")
+         (cond ((equal system-name "MESECINA") "C:/XLZHANG/DevTools/cygwin/bin/aspell")
                ((equal system-name "XLZHANGDELL") "aspell" )
                (heartnheart/is-win32 "D:/Software/cygwin/bin/aspell")
                (t "aspell")
@@ -211,12 +220,23 @@ set  holidays later won't work
              )
 #+END_SRC
 * Packages Setup (ELPA)
+** org-screen-shot
+#+BEGIN_SRC emacs-lisp
+;(require 'org-screenshot)
+#+END_SRC
+** keyfreq
+#+BEGIN_SRC emacs-lisp
+  (require 'keyfreq)
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1)
+
+#+END_SRC
 ** org-page
 #+BEGIN_SRC emacs-lisp 
-;; (require 'org-page)
-;; (setq op/repository-directory "C:/XLZHANG/Homepages/heartnheart.github.io")
-;; (setq op/site-domain "http://heartnheart.github.io/")
-;; (setq op/personal-disqus-shortname "heartnheart")
+(require 'org-page)
+(setq op/repository-directory "C:/XLZHANG/Homepages/heartnheart.github.io")
+(setq op/site-domain "http://heartnheart.github.io/")
+(setq op/personal-disqus-shortname "heartnheart")
 #+END_SRC
 ** expand-region
 (require 'expand-region)
@@ -234,6 +254,7 @@ set  holidays later won't work
    #+end_src
 ** smartparen
 #+BEGIN_SRC emacs-lisp
+(require-package 'smartparens)
 (require 'smartparens-config)
 (sp-local-pair 'org-mode "\\|" "\\|")
 (sp-local-pair 'org-mode "'" nil :actions nil)
@@ -243,13 +264,13 @@ set  holidays later won't work
 #+END_SRC
 ** smex
    #+begin_src emacs-lisp
-     (require-package 'smex)
-     (require 'smex)
-     (smex-initialize)
-     (global-set-key (kbd "M-x") 'smex)
-     (global-set-key (kbd "M-X") 'semx-major-mode-commands)
-     ;; To use the old M-x
-     (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+     ;     (require-package 'smex)
+     ;     (require 'smex)
+     ;     (smex-initialize)
+     ;     (global-set-key (kbd "M-x") 'smex)
+     ;     (global-set-key (kbd "M-X") 'semx-major-mode-commands)
+          ;; To use the old M-x
+     ;     (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
    #+end_src
 ** switch-window
    #+BEGIN_SRC emacs-lisp
@@ -266,23 +287,23 @@ set  holidays later won't work
 ** org2blog
 *** advice for org2blog-post
     #+BEGIN_SRC emacs-lisp :tangle no
-      (defadvice org2blog/wp-post-buffer
-       	(around crystal/wp-post-buffer-around activate)
-       	"save flyspell state before post and restore it"
-       	(let ((flyspell-state (and (boundp 'flyspell-mode) flyspell-mode)))
-              (progn 
-               	ad-do-it
-               	(and flyspell-state (flyspell-mode 1)))))
+      ;; (defadvice org2blog/wp-post-buffer
+      ;;   (around crystal/wp-post-buffer-around activate)
+      ;;   "save flyspell state before post and restore it"
+      ;;   (let ((flyspell-state (and (boundp 'flyspell-mode) flyspell-mode)))
+      ;;         (progn 
+      ;;           ad-do-it
+      ;;           (and flyspell-state (flyspell-mode 1)))))
     #+END_SRC
 *** org2blog
     #+begin_src emacs-lisp :tangle no
-      ;(add-to-list 'load-path "D:/home/.emacs.d/fromgit/org2blog")
-      ;(require 'org2blog-autoloads)
-      (setq org2blog/wp-blog-alist
-	    '(("heartnheart"
-	       :url "http://www.heartnheart.org/xmlrpc.php"
-	       :username "speculation437"
-	       :tags-as-categories nil)))
+      ;; ;(add-to-list 'load-path "D:/home/.emacs.d/fromgit/org2blog")
+      ;; ;(require 'org2blog-autoloads)
+      ;; (setq org2blog/wp-blog-alist
+      ;;       '(("heartnheart"
+      ;;          :url "http://www.heartnheart.org/xmlrpc.php"
+      ;;          :username "speculation437"
+      ;;          :tags-as-categories nil)))
     #+end_src
 
 
@@ -295,6 +316,7 @@ set  holidays later won't work
    #+BEGIN_SRC emacs-lisp
      (require-package 'auto-complete)
      (require 'auto-complete-config)
+	 (require-package 'ac-math)
      (ac-config-default)
      (setq ac-use-menu-map t)
      (define-key ac-menu-map "\C-n" 'ac-next)
@@ -386,45 +408,45 @@ set  holidays later won't work
 
 ** AucTex
 #+BEGIN_SRC emacs-lisp
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq TeX-source-correlate-mode t)                                        ;(setq-default TeX-master nil)
-(setq TeX-source-correlate-method 'synctex)
-(setq TeX-view-program-list
-      '(("Sumatra PDF" ("\"C:/XLZHANG/DevTools/SumatraPDF/SumatraPDF.exe\" -reuse-instance"
-                      (mode-io-correlate " -forward-search %b %n ") " %o"))))
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    (setq TeX-source-correlate-mode t)                                        ;(setq-default TeX-master nil)
+    (setq TeX-source-correlate-method 'synctex)
+    (setq TeX-view-program-list
+          '(("Sumatra PDF" ("\"C:/XLZHANG/DevTools/SumatraPDF/SumatraPDF.exe\" -reuse-instance"
+                          (mode-io-correlate " -forward-search %b %n ") " %o"))))
 
 
-(if heartnheart/is-win32
-    (setq TeX-engine-alist 
-          '(
-            (xetex "XeTeX" 
-                   "xetex  --shell-escape" 
-                   "xelatex --shell-escape" 
-                   "xetex")
-            (xetex_sh "XeTeX shell escape" 
-                      "xetex --file-line-error --shell-escape" 
-                      "xelatex --file-line-error --shell-escape" 
-                      "xetex"))))
+     (if heartnheart/is-win32
+         (setq TeX-engine-alist 
+               '(
+                 (xetex "XeTeX" 
+                        "xetex  --shell-escape" 
+                        "xelatex --shell-escape" 
+                        "xetex")
+                 (xetex_sh "XeTeX shell escape" 
+                           "xetex --file-line-error --shell-escape" 
+                           "xelatex --file-line-error --shell-escape" 
+                           "xetex"))))
 
 
-(eval-after-load "tex"
-  '(progn
-     (TeX-global-PDF-mode t)
-     (assq-delete-all 'output-pdf TeX-view-program-selection)
-     (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))))
+     (eval-after-load "tex"
+       '(progn
+          (TeX-global-PDF-mode t)
+          (assq-delete-all 'output-pdf TeX-view-program-selection)
+          (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))))
 
 
-;(setq TeX-engine 'default)
-        
-(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode) 
+  ;   (setq TeX-engine 'xetex) ; this will affect the color of preview-latex
+            
+    (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode) 
 
 
 #+END_SRC
 ** RefTex
 #+BEGIN_SRC emacs-lisp
   (setq reftex-default-bibliography '("~/research/references/references.bib"))
-  (setq reftex-cite-format "\\citeA{%l}" )
+;  (setq reftex-cite-format "\\citeA{%l}" )
 #+END_SRC
 ** org mobile
 *** src
@@ -470,31 +492,33 @@ set  holidays later won't work
 
 ** org latex pdf
 #+BEGIN_SRC emacs-lisp
-  (setq org-latex-pdf-process '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                                "bibtex %b"
-                                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-  
-                                          ;(setq org-latex-pdf-process (list "latexmk -pdf -bibtex %f"))
-  (require 'ox-latex)
-;  (add-to-list 'org-latex-packages-alist '("" "minted"))
-;  (setq org-latex-listings 'minted)
+  ;(require-package 'org-plus-contrib)
+    (setq org-latex-pdf-process '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                                  "bibtex %b"
+                                  "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                                  "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+    
+                                            ;(setq org-latex-pdf-process (list "latexmk -pdf -bibtex %f"))
+  ;  (require 'ox-latex)  ; never call this ,which crashes org-publish
+  ;  (add-to-list 'org-latex-packages-alist '("" "minted"))
+  ;  (setq org-latex-listings 'minted)
 #+END_SRC
 ** org beamer
 #+BEGIN_SRC emacs-lisp
 (setq org-latex-listings 'minted)
-(require 'ox-latex)
+;(require 'ox-latex) ; never call this, will crash org-publish
 (add-to-list 'org-latex-packages-alist '("" "minted" nil))
 #+END_SRC
-** org-mode by bh
+** helm
 #+BEGIN_SRC emacs-lisp
-(load "org-mode.el")
-(message "org-agendafiles = %s" org-agenda-files)
+(require 'helm-config)
+(helm-mode 1)
 #+END_SRC
-
-
-
 * Packages Setup (OWN)
+** generate image table for folder
+#+BEGIN_SRC emacs-lisp
+(load "xlz-generate-image-table.el" )
+#+END_SRC
 ** org-insert-raw-image
 #+BEGIN_SRC emacs-lisp
 (defvar org-clipboard-image-suffix 0)
@@ -678,71 +702,74 @@ last-command-char in it.
    
 * GTD
 ** org mode 8 
-   #+BEGIN_SRC emacs-lisp
-   (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)\\'" . org-mode))
-   (require 'org)
-   
-   ;; common key bindings
-   (global-set-key "\C-cl" 'org-store-link)
-   (global-set-key "\C-cb" 'org-iswitchb)
-   (global-set-key "\C-cc" 'org-capture)
-   (global-set-key "\C-ca" 'org-agenda)
-   
-   
-   ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
-   (setq org-capture-templates
-         (quote (("t" "Todo" entry (file "~/org/refile.org")
-                  "* TODO %?\n%U\n%a\n")
-                 ("n" "note" entry (file "~/org/refile.org")
-                  "* %? :NOTE:\n%U\n%a\n")
-                 
-                 ("j" "Journal" entry (file+datetree "~/org/journal.org")
-                  "* %?\n%U\n" )
-   
-                 )))
-   
-        
-   
-   (setq org-startup-indented t)           ;use org-indent-mode by default
-   (setq org-export-with-smart-quotes t)
-   ;; use sumatraPDF to open PDF
-   (add-hook 'org-mode-hook
-         '(lambda ()
-            (local-unset-key "\C-c[")
-            (local-unset-key "\C-c]")
-            (delete '("\\.pdf\\'" . default) org-file-apps)
-            (add-to-list 'org-file-apps
-                         `("\\.pdf\\'" .
-                           ,(cond (heartnheart/is-win32 "sumatraPDF -reuse-instance %s")
-                                 (t "FoxitReader %s")
-                                 )
-                           )
-                         )))
-   (setq org-entities-user '(("space" "\\ " nil " " " " " " " ")))
-          
-   ;; Open thunderlink in org mode
-   (require 'org)
-   (org-add-link-type "thunderlink" 'org-thunderlink-open)
-   (defun org-thunderlink-open (path)
-   "open thunderlink"
-       (shell-command
-           (format "thunderbird -thunderlink thunderlink:%s" path
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)\\'" . org-mode))
+(require 'org)
+
+;; common key bindings
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-cb" 'org-iswitchb)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-ca" 'org-agenda)
+
+
+(setq org-agenda-files (quote ("~/org"  )
+                              ))
+
+
+
+(setq org-startup-indented t)           ;use org-indent-mode by default
+(setq org-export-with-smart-quotes t)
+;; use sumatraPDF to open PDF
+(add-hook 'org-mode-hook
+          '(lambda ()
+             (local-unset-key "\C-c[")
+             (local-unset-key "\C-c]")
+             (delete '("\\.pdf\\'" . default) org-file-apps)
+             (add-to-list 'org-file-apps
+                          `("\\.pdf\\'" .
+                            ,(cond (heartnheart/is-win32 "sumatraPDF -reuse-instance %s")
+                                   (t "FoxitReader %s")
+                                   )
+                            )
+                          )))
+(setq org-entities-user '(("space" "\\ " nil " " " " " " " ")))
+
+;; Open thunderlink in org mode
+(require 'org)
+(org-add-link-type "thunderlink" 'org-thunderlink-open)
+(defun org-thunderlink-open (path)
+  "open thunderlink"
+  (shell-command
+   (format "thunderbird -thunderlink thunderlink:%s" path
            )
-       )
    )
-   #+END_SRC
+  )
+#+END_SRC
 *** Emphasis is allowed in more lines
 #+BEGIN_SRC emacs-lisp
 (setcar (nthcdr 4 org-emphasis-regexp-components) 4)
 (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist))
+#+END_SRC
+** org mode reftex setup
+#+BEGIN_SRC emacs-lisp
+(defun org-mode-reftex-setup ()
+  (load-library "reftex")
+  (and (buffer-file-name)
+       (file-exists-p (buffer-file-name))
+       (setq TeX-master t)
+       (reftex-parse-all))
+  (define-key org-mode-map (kbd "C-c )") 'reftex-citation))
+(add-hook 'org-mode-hook 'org-mode-reftex-setup)
+
 #+END_SRC
 ** org cdlatex mode
 #+BEGIN_SRC emacs-lisp
 
 (defun change-org-cdlatex-keys ()
 
-;  (define-key org-cdlatex-mode-map (kbd "'") 'cdlatex-math-symbol)
-;  (define-key org-cdlatex-mode-map (kbd "`") 'org-cdlatex-math-modify)
+;  (define-key org-cdlatex-mode-map (kbd ";") 'cdlatex-math-symbol)
+;  (define-key org-cdlatex-mode-map (kbd "'") 'org-cdlatex-math-modify)
   (define-key org-cdlatex-mode-map (kbd "_") nil)
   (define-key org-cdlatex-mode-map (kbd "^") nil)
   (add-to-list 'cdlatex-math-modify-alist 
@@ -762,21 +789,92 @@ The Easiest way is to tick `org-drill' using customize of variable
 `org-modules'. For manually set up, use `(require 'org-drill)'
 ** org publish
 #+BEGIN_SRC emacs-lisp
+(require 'org-publish)
+
 (setq org-publish-project-alist
-      '(("org"
-         :base-directory "~/org/"
-         :publishing-directory "C:/XLZHANG/Homepages/localtest/"
-         :section-numbers nil
+      '(
+        ("notes-in-org"
+         :base-directory "~/notes"
          :base-extension "org"
-         :auto-sitemap t
-         :sitemap-filename "index.org"
-         :sitemap-title "index"
-         :sitemap-function org-publish-org-sitemap
-         :link-home "index.html"
-         :with-toc nil
+         :publishing-directory "W:/public_html/notes"
+         :recursive t
          :publishing-function org-html-publish-to-html
          :html-head "<link rel=\"stylesheet\"
-                         href=\"../other/mystyle.css\"
-                         type=\"text/css\"/>")))
+                    href=\"../STYLESHEET/stylesheet.css\" type=\"text/css\"/>"
+         :html-preamble t
+         :auto-sitemap t
+         )
+        ("notes-static"
+         :base-directory "~/notes"
+         :base-extension "css\\|png"
+         :publishing-directory "W:/public_html/notes"
+         :recursive t
+         :publishing-function org-publish-attachment
+         )
+        ("notes"
+         :components ("notes-in-org" "notes-static")
+         
+         )
+        ))
+
+        
 #+END_SRC
 
+** org-mode by bh (selected function and settings)
+
+#+BEGIN_SRC emacs-lisp
+(load "org-mode.el")
+(message "org-agendafiles = %s" org-agenda-files)
+
+
+
+
+#+END_SRC
+
+
+
+
+** org Chinese Html Space
+#+BEGIN_SRC emacs-lisp
+(defadvice org-html-paragraph (before org-html-paragraph-advice
+                                      (paragraph contents info) activate)
+  "Join consecutive Chinese lines into a single long line without
+unwanted space when exporting org-mode to html."
+  (let* ((origin-contents (ad-get-arg 1))
+         (fix-regexp "[[:multibyte:]]")
+         (fixed-contents
+          (replace-regexp-in-string
+           (concat
+            "\\(" fix-regexp "\\) *\n *\\(" fix-regexp "\\)") "\\1\\2" origin-contents)))
+
+    (ad-set-arg 1 fixed-contents)))
+#+END_SRC
+** org agenda view color 
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-finalize-agenda-hook
+          (lambda ()
+            (save-excursion
+              (color-org-header "Research:"  "firebrick1")
+              (color-org-header "MISC_TASK:" "magenta3")
+              (color-org-header "Morrison:"      "chartreuse3")
+              (color-org-header "Finance:"      "gold1")
+              (color-org-header "Health:"  "DarkOrange1")
+              (color-org-header "TA:"  "DeepSkyBlue1"))))
+
+(defun color-org-header (tag col)
+  ""
+  (interactive)
+  (goto-char (point-min))
+  (while (re-search-forward tag nil t)
+    (add-text-properties (match-beginning 0) (point-at-eol)
+                         `(face (:foreground ,col )  )))
+  (goto-char (point-min))
+  (while (re-search-forward "TODO" nil t)
+    (add-text-properties (match-beginning 0) (match-end 0)
+                         `(face (:box "red1" )  )))
+  (goto-char (point-min))
+  (while (re-search-forward "DONE" nil t)
+    (add-text-properties (match-beginning 0) (match-end 0)
+                         `(face (:strike-through "green" )  )))
+  )
+#+END_SRC
